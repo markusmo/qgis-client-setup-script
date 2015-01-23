@@ -19,6 +19,9 @@ sudo -u postgres createdb -O $user $database
 #create extension
 sudo -u postgres psql -c "CREATE EXTENSION postgis; CREATE EXTENSION postgis_topology;" $database
 
+#create database
+pqsl -d $database -a -f init.sql
+
 #install qgis and qgis-server
 sudo apt-get install qgis
 sudo apt-get install qgis-mapserver
