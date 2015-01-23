@@ -39,67 +39,7 @@ echo "ServerName localhost" | sudo tee /etc/apache2/conf-available/servername.co
 sudo a2enconf servername
 sudo /etc/init.d/apache2 restart
 
-apache_conf="<VirtualHost *:80>
-  ServerAdmin webmaster@localhost
-  ServerName localhost
-
-  DocumentRoot /home/user/QGIS-Web-Client/site
-  <Directory /home/user/QGIS-Web-Client>
-    Options FollowSymLinks
-    AllowOverride None
-    Order allow,deny
-    Allow from all
-    Require all granted
-  </Directory>
-  <Directory /home/user/QGIS-Web-Client/site>
-    Options Indexes FollowSymLinks MultiViews
-    AllowOverride None
-    Order allow,deny
-    Allow from all
-    Require all granted
-  </Directory>
-
-  ScriptAlias /cgi-bin/ /home/user/QGIS-Web-Client/cgi-bin/
-  <Directory \"/home/user/QGIS-Web-Client/cgi-bin/\">
-    AllowOverride None
-    Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch +FollowSymLinks
-    Order allow,deny
-    Allow from all
-    Require all granted
-    AddHandler fcgid-script .fcgi
-    #Uncomment the next line to enable logging to a file
-    #SetEnv QGIS_LOG_FILE /tmp/qgislog.txt
-  </Directory>
-
-  # optional rewrite rules
-
-  # Forbid direct access
-#  RewriteRule ^/cgi-bin/.*$ - [F]
-
-  # Search with SearchPanel
-
-  # sample search on layer 'Hello'
-  #RewriteCond %{QUERY_STRING} ^(?:.*)query=samplesearch&*(?:.*)$
-  #RewriteCond %{QUERY_STRING} ^(?:(?:.*)&)?colour=([^&]*)(?:.*)$
-  #RewriteRule ^/wms/(.+)$ /cgi-bin/qgis_mapserv.fcgi?map=/<path-to-qgis-server-projects>/$1.qgs&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&LAYERS=Hello&QUERY_LAYERS=Hello&FEATURE_COUNT=20&INFO_FORMAT=text/xml&SRS=EPSG:4326&FILTER=Hello:\"colour\"\ =\ '%1' [PT]
-
-  # Rewrite /wms/mapname to qgis_mapserv.fcgi?map=/<path-to-qgis-server-projects>/mapname.qgs
-  #RewriteRule ^/wms/(.+)$ /cgi-bin/qgis_mapserv.fcgi?map=/<path-to-qgis-server-projects>/$1.qgs [QSA,PT]
-  # Rewrite /maps/mapname to qgis-web-client main page. mapname will be extracted for wms calls in Javascript code.
-  #RewriteRule ^/maps/([^\.]+)$ /qgis-web-client/site/qgiswebclient.html [PT]
-  # Rewrite /maps/* to qgis-web-client/site (e.g. /maps/gis_icons/mActionZoomNext.png -> /qgis-web-client/site/gis_icons/mActionZoomNext.png)
-  #RewriteRule ^/maps/(.*) /qgis-web-client/site/$1 [PT]
-
-
-  ErrorLog ${APACHE_LOG_DIR}/qgis-web-client-error.log
-  CustomLog ${APACHE_LOG_DIR}/qgis-web-client-access.log combined
-
-</VirtualHost>"
-
-#create a apache-conf for qgis client
-touch QGIS-Web-Client/apache-conf/qgis-web-client.conf
-echo $apache_conf > QGIS-Web-Client/apache-conf/qgis-web-client.conf
-sudo ln -s QGIS-Web-Client/apache-conf/001-qgis-web-client.conf /etc/apache2/sites-available/qgis-web-client.conf
+sudo ln -s QGIS-Web-Client/apache-conf/qgis-web-client.conf /etc/apache2/sites-available/qgis-web-client.conf
 #sudo mv /etc/apache2/sites-enabled/000-default.conf /etc/apache2/sites-enabled/000-default.conf.old
 
 sudo a2enmod rewrite && sudo a2ensite /etc/apache2/sites-available/qgis-web-client.conf && sudo service /etc/init.d/apache2 restart
