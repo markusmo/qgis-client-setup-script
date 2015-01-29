@@ -23,7 +23,8 @@ CREATE TABLE analyzedtrip (
     id_analyzedtrip integer NOT NULL,
     id_startwaypoint integer NOT NULL,
     id_endwaypoint integer NOT NULL,
-    id_transportline integer NOT NULL
+    id_transportline integer,
+    id_transporttype integer NOT NULL
 );
 
 
@@ -141,10 +142,10 @@ ALTER SEQUENCE transportline_id_transportline_seq OWNED BY transportline.id_tran
 --
 
 CREATE TABLE transportline_station (
+    id_transportline_station integer NOT NULL,
     id_transportline bigint NOT NULL,
     id_transportstation bigint NOT NULL,
-    sequence integer,
-    id_transportline_station integer NOT NULL
+    sequence integer
 );
 
 
@@ -444,6 +445,13 @@ ALTER TABLE ONLY waypoint
 
 
 --
+-- Name: fki_transporttype_fk; Type: INDEX; Schema: public; Owner: bigdata; Tablespace: 
+--
+
+CREATE INDEX fki_transporttype_fk ON analyzedtrip USING btree (id_transporttype);
+
+
+--
 -- Name: in_searchstring_tsvector_gin; Type: INDEX; Schema: public; Owner: bigdata; Tablespace: 
 --
 
@@ -496,6 +504,14 @@ ALTER TABLE ONLY transportline_station
 
 ALTER TABLE ONLY transportline_station
     ADD CONSTRAINT transportstation_fk FOREIGN KEY (id_transportstation) REFERENCES transportstation(id_transportstation);
+
+
+--
+-- Name: transporttype_fk; Type: FK CONSTRAINT; Schema: public; Owner: bigdata
+--
+
+ALTER TABLE ONLY analyzedtrip
+    ADD CONSTRAINT transporttype_fk FOREIGN KEY (id_transporttype) REFERENCES transporttype(id_transporttype);
 
 
 --
